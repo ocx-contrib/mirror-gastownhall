@@ -1,0 +1,39 @@
+# Shared base for every spec in this repository (Gas Town Hall tools).
+#
+# NOT a spec: no name/target/source, never loaded on its own. Package-owned
+# keys (name, target, source, assets, asset_type, metadata, catalog, tests,
+# versions, announce, annotations, platforms) stay in <pkg>/mirror.yml.
+#
+# ⚠️ `extends:` is a SHALLOW merge of top-level keys — a spec that sets a key
+# replaces the block outright. `platforms:` is deliberately absent: the
+# container matrix follows each package's own libc measurement.
+
+skip_prereleases: true
+cascade: true
+
+# Fleet rule: a build segment on every published tag, so a re-publish never
+# orphans a digest a consumer's ocx.lock pins. Upstream versions are plain
+# X.Y.Z (no `+build` metadata), so `date` is safe.
+build_timestamp: date
+
+verify:
+  github_asset_digest: true
+
+concurrency:
+  # bd embeds the Dolt engine: ~45-55 MB compressed, ~130-160 MB unpacked.
+  max_downloads: 6
+  max_bundles: 4
+  max_pushes: 2
+  rate_limit_ms: 100
+  max_retries: 3
+  compression_threads: 0
+
+# Flat archives (no wrapper directory) → PATH is a bare ${installPath}, which
+# gives bin_scan no target (exit 65 under auto/verify). `off` + a hand-listed
+# `binaries` in metadata.json is the blessed shape.
+bin_scan: off
+
+notify:
+  discord:
+    webhook_secret: OCX_MIRROR_DISCORD_HOOK
+    user_id: "227748867204972545"  # pinged in-message on failures

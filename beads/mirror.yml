@@ -1,0 +1,124 @@
+extends: ../mirror-base.yml
+
+name: beads
+
+# Logical index package `gastownhall/beads` at the physical path
+# `ghcr.io/ocx-contrib/gastownhall/beads` — slash segments, owner-first.
+# Namespace = the upstream org (Gas Town Hall also publishes gastown).
+target:
+  registry: ghcr.io
+  repository: ocx-contrib/gastownhall/beads
+
+source:
+  type: github_release
+  owner: gastownhall
+  repo: beads
+  tag_pattern: "^v(?P<version>\\d+\\.\\d+\\.\\d+)$"
+
+# ─── libc gate (Phase 3.5) — the evidence ───────────────────────────────────
+#
+# bd is built with CGO_ENABLED=1 on linux (embedded Dolt engine), so it is
+# DYNAMICALLY linked against glibc on both arches:
+#
+#   $ file bd          # v1.3.4 linux_amd64 (same on v1.0.1 … v1.3.0)
+#   ELF 64-bit LSB executable, x86-64, dynamically linked,
+#   interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, stripped
+#   $ readelf -d bd | grep NEEDED          → [libc.so.6]
+#   $ readelf -V bd | grep -o 'GLIBC_[0-9.]*' | sort -uV | tail -1 → GLIBC_2.34
+#
+#   $ file bd          # v1.3.4 linux_arm64 (same on v1.0.0)
+#   ELF 64-bit LSB executable, ARM aarch64, dynamically linked,
+#   interpreter /lib/ld-linux-aarch64.so.1
+#   NEEDED → [libc.so.6] [ld-linux-aarch64.so.1]; GLIBC floor 2.34
+#
+# Upstream ships no musl build → `+libc.glibc` on both Linux keys, ubuntu +
+# fedora legs (both glibc 2.39, clears the 2.34 floor), no alpine.
+#
+# v1.0.0 linux_amd64 alone ALSO NEEDs libicui18n.so.74 + libstdc++ (an exact
+# ICU soname a stock userland may lack). Every later amd64 release measured
+# (1.0.1, 1.0.2, 1.0.3, 1.0.4, 1.1.0, 1.1.2, 1.2.2, 1.3.0, 1.3.4) needs only
+# libc.so.6 — hence versions.min 1.0.1 below.
+#
+# ─── Scope — resolution verified BOTH ways on v1.0.1 and v1.3.4 ─────────────
+#
+# Each pattern matches exactly one asset on both. Upstream also ships
+# android/arm64 and freebsd/amd64 (not expressible as OCX platforms here),
+# `checksums.txt`, a `contract_corpus` tarball and an `.spdx.json` SBOM — the
+# anchored patterns keep them out.
+#
+# windows/arm64 is built CGO_ENABLED=0 upstream (.goreleaser.yml) — no
+# embedded Dolt, server mode only. Carried as shipped; tests/smoke.star
+# asserts liveness only on that leg.
+assets:
+  "linux/amd64+libc.glibc":
+    - "^beads_\\d+\\.\\d+\\.\\d+_linux_amd64\\.tar\\.gz$"
+  "linux/arm64+libc.glibc":
+    - "^beads_\\d+\\.\\d+\\.\\d+_linux_arm64\\.tar\\.gz$"
+  # ── PASS 2 (darwin) ──
+  # darwin/amd64:
+  #   - "^beads_\\d+\\.\\d+\\.\\d+_darwin_amd64\\.tar\\.gz$"
+  # darwin/arm64:
+  #   - "^beads_\\d+\\.\\d+\\.\\d+_darwin_arm64\\.tar\\.gz$"
+  # ── PASS 3 (windows) ──
+  # windows/amd64:
+  #   - "^beads_\\d+\\.\\d+\\.\\d+_windows_amd64\\.zip$"
+  # windows/arm64:
+  #   - "^beads_\\d+\\.\\d+\\.\\d+_windows_arm64\\.zip$"
+
+asset_type:
+  # FLAT archive everywhere: CHANGELOG.md LICENSE README.md bd (bd.exe on
+  # Windows) at the root (`tar tzvf` v1.0.0/v1.3.4 linux, v1.3.4 darwin — the
+  # darwin tar carries a `./` prefix, harmless at strip 0; `unzip -l` v1.3.4
+  # windows/amd64, v1.0.0 windows/arm64).
+  type: archive
+  strip_components: 0
+
+metadata:
+  default: metadata.json
+
+catalog:
+  logo: logo.svg
+
+versions:
+  min: "1.0.1"
+  new_per_run: 5
+  poll_interval: "53 4-23/6 * * *"   # poll_stagger.py gastownhall/beads
+
+tests:
+  # Repo-root-relative, unlike metadata/catalog above.
+  - name: smoke
+    script: beads/tests/smoke.star
+
+platforms:
+  "linux/amd64+libc.glibc":
+    runner: ubuntu-latest
+    containers:
+      - { image: "ubuntu:24.04", shell: bash }
+      - { image: "fedora:40",    shell: bash }
+  "linux/arm64+libc.glibc":
+    runner: ubuntu-24.04-arm
+    containers:
+      - { image: "ubuntu:24.04", shell: bash }
+      - { image: "fedora:40",    shell: bash }
+  # ── PASS 2 (darwin) ──
+  # darwin/amd64:
+  #   runner: macos-15            # Rosetta 2; native Intel pool deadlocks push
+  #   prefix: ["arch", "-x86_64"]
+  # darwin/arm64:
+  #   runner: macos-15
+  #   shell: bash
+  # ── PASS 3 (windows) ──
+  # windows/amd64:
+  #   runner: windows-latest
+  #   shell: pwsh
+  # windows/arm64:
+  #   runner: windows-11-arm
+  #   shell: pwsh
+
+annotations:
+  # $ gh api repos/gastownhall/beads/license --jq .license.spdx_id → MIT
+  org.opencontainers.image.licenses: "MIT"
+
+announce:
+  package: gastownhall/beads
+  fork: ocx-contrib/index
