@@ -54,16 +54,14 @@ assets:
     - "^beads_\\d+\\.\\d+\\.\\d+_linux_amd64\\.tar\\.gz$"
   "linux/arm64+libc.glibc":
     - "^beads_\\d+\\.\\d+\\.\\d+_linux_arm64\\.tar\\.gz$"
-  # ── PASS 2 (darwin) ──
-  # darwin/amd64:
-  #   - "^beads_\\d+\\.\\d+\\.\\d+_darwin_amd64\\.tar\\.gz$"
-  # darwin/arm64:
-  #   - "^beads_\\d+\\.\\d+\\.\\d+_darwin_arm64\\.tar\\.gz$"
-  # ── PASS 3 (windows) ──
-  # windows/amd64:
-  #   - "^beads_\\d+\\.\\d+\\.\\d+_windows_amd64\\.zip$"
-  # windows/arm64:
-  #   - "^beads_\\d+\\.\\d+\\.\\d+_windows_arm64\\.zip$"
+  darwin/amd64:
+    - "^beads_\\d+\\.\\d+\\.\\d+_darwin_amd64\\.tar\\.gz$"
+  darwin/arm64:
+    - "^beads_\\d+\\.\\d+\\.\\d+_darwin_arm64\\.tar\\.gz$"
+  windows/amd64:
+    - "^beads_\\d+\\.\\d+\\.\\d+_windows_amd64\\.zip$"
+  windows/arm64:
+    - "^beads_\\d+\\.\\d+\\.\\d+_windows_arm64\\.zip$"
 
 asset_type:
   # FLAT archive everywhere: CHANGELOG.md LICENSE README.md bd (bd.exe on
@@ -100,20 +98,18 @@ platforms:
     containers:
       - { image: "ubuntu:24.04", shell: bash }
       - { image: "fedora:40",    shell: bash }
-  # ── PASS 2 (darwin) ──
-  # darwin/amd64:
-  #   runner: macos-15            # Rosetta 2; native Intel pool deadlocks push
-  #   prefix: ["arch", "-x86_64"]
-  # darwin/arm64:
-  #   runner: macos-15
-  #   shell: bash
-  # ── PASS 3 (windows) ──
-  # windows/amd64:
-  #   runner: windows-latest
-  #   shell: pwsh
-  # windows/arm64:
-  #   runner: windows-11-arm
-  #   shell: pwsh
+  darwin/amd64:
+    runner: macos-15            # Rosetta 2; native Intel pool deadlocks push
+    prefix: ["arch", "-x86_64"]
+  darwin/arm64:
+    runner: macos-15
+    shell: bash
+  windows/amd64:
+    runner: windows-latest
+    shell: pwsh
+  windows/arm64:
+    runner: windows-11-arm
+    shell: pwsh
 
 annotations:
   # $ gh api repos/gastownhall/beads/license --jq .license.spdx_id → MIT
