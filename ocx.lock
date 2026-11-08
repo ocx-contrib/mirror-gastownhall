@@ -3,7 +3,7 @@ lock_version = 3
 declaration_hash_version = 1
 declaration_hash = "sha256:f3ff2c8f4e8127a58ba20d77efddb3013e43604646b6814836d6b9755ab3affd"
 generated_by = "ocx 0.6.5"
-generated_at = "2026-11-08T11:32:29Z"
+generated_at = "2026-11-08T12:23:51Z"
 
 [[tool]]
 name = "cli"
@@ -11,12 +11,12 @@ group = "default"
 repository = "ocx.sh/ocx/cli"
 
 [tool.platforms]
-"darwin/amd64" = "sha256:8050d5dd17d7cd523ce495cdd8ef025b426884bad64c435464385e8b78a4f150"
-"darwin/arm64" = "sha256:69edc3ec67606eda13028682c53b8aee9a13c1e070e3cea201dae9b9c799ce90"
-"linux/amd64" = "sha256:611ab59fe009e3233625fbea54b625bd48333c3a1897b7aef38251a6053c0084"
-"linux/arm64" = "sha256:f3202db5138b14a572929ae3025898a1d07105f0900fb1aea36562c67210a2d5"
-"windows/amd64" = "sha256:12d8ceb4a16c77028a7891be86fadf3daff236359859396463df1a29d7944dd4"
-"windows/arm64" = "sha256:ea57817fadeeb0941e2a200468702be56fe9ca3be2217a3938766495ead0d358"
+"darwin/amd64" = "sha256:42e9fc9007aa1e70bde87005ae89edbce418b0a24b48efd4c9f9215774a11c56"
+"darwin/arm64" = "sha256:d9a5d3f92806762f11139bb3be69e154b4487a472d55f23e346274d44c704847"
+"linux/amd64" = "sha256:853a43059f4205e84dc2f9bb62210cbd93159268e1d8fe3a54837332e4936250"
+"linux/arm64" = "sha256:d8e1a580de62e284623da0182e3021ce8458276b2c10331f8e3ba061c458af54"
+"windows/amd64" = "sha256:f771f61a7d596a99dd518a95df56d86aa7bdbda5bd6d4992ae072101c61c368d"
+"windows/arm64" = "sha256:68a8425d23d519707723fda1c0ad6467302e4e453d5fdb42e190adb1aeb978aa"
 
 [[tool]]
 name = "mirror"
@@ -24,12 +24,12 @@ group = "default"
 repository = "ocx.sh/ocx/mirror"
 
 [tool.platforms]
-"darwin/amd64" = "sha256:36a1bda46fb8ab2b081f8e25f29948c6cc7b4bc62282a9e57550facfc2521fd3"
-"darwin/arm64" = "sha256:f13c14a38db738eb78f5674217130a3a7de27d06a026cc47e7d646d9b5c58e1e"
-"linux/amd64" = "sha256:e570766737196e0223c9c1d87b4300dbd8292614f21829d556056671d77fcd38"
-"linux/arm64" = "sha256:7604c05aa5831a20f65fce2c07dd25178498239ad60519481072ea31da754bd3"
-"windows/amd64" = "sha256:91a30c8ba57f5a934959111790a8f18f658b9fb0bc2477992a7033e264c68edd"
-"windows/arm64" = "sha256:26b4306eeeb0fde1245b303186b8c06732ca1534a19eaddfedb651da38d43ce3"
+"darwin/amd64" = "sha256:8229631007f0b55aaaa87d9ec4f45ddb68362c6daa0e398872a408df3c4970b1"
+"darwin/arm64" = "sha256:fc8b15a204c3aa539aad9a21f2af8d579c64bbe5271cdba31ed73bd3ca81ce35"
+"linux/amd64" = "sha256:8cd1df3ed7f0564de181d26071e3014393fec0ed5db02694483b52bd1a74239c"
+"linux/arm64" = "sha256:f8e075c47f020d889a197ec7a520573df507547a171c5b5348e6930f0c2c00a5"
+"windows/amd64" = "sha256:06b688eb66d7794730d3daf906f8fa349279e48930a5fbe8d155338d6d26a281"
+"windows/arm64" = "sha256:a3b09e6009123f74c306d52e5c0d626ae15dab341ff9f7b4f104660c86f65903"
 
 [[tool]]
 name = "task"
