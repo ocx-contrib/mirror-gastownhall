@@ -98,12 +98,18 @@ platforms:
     containers:
       - { image: "ubuntu:24.04", shell: bash }
       - { image: "fedora:40",    shell: bash }
+  # darwin min_version 1.0.3: the 1.0.1/1.0.2 darwin tarballs nest everything
+  # under a `beads_<V>_darwin_<arch>/` wrapper dir (`tar tvzf`, both arches);
+  # 1.0.3+ is flat like every other platform. asset_type cannot vary per
+  # version, so those two darwin tiles are out of window, not published.
   darwin/amd64:
     runner: macos-15            # Rosetta 2; native Intel pool deadlocks push
     prefix: ["arch", "-x86_64"]
+    min_version: "1.0.3"
   darwin/arm64:
     runner: macos-15
     shell: bash
+    min_version: "1.0.3"
   windows/amd64:
     runner: windows-latest
     shell: pwsh
